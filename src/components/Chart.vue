@@ -1,82 +1,32 @@
 <template>
   <div>
-      <svg width="500" height="500">
-        <g
-          class="flower"
-          v-for="flower in layoutData.children"
-          :key="flower.data.name"
-          :style="{
-            transform: `translate(${flower.x}px, ${flower.y}px)`
-          }"
-        >
-          <circle
-            class="flower__circle"
-            :r="flower.r"
-            :fill="flower.data.color"
-          />
-          <text class=“flower__label”>
-            {{ flower.data.name }}
-          </text>
-        </g>
-      </svg>
+    <svg width="800" height="800">
+      
+    </svg>
   </div>
 </template>
 
 <script>
-import { hierarchy, pack } from 'd3-hierarchy'
+import { scaleLinear } from "d3-scale";
+import { lineRadial } from 'd3-shape'
 export default {
   data() {
     return {
-      flowers: [
-        {
-          name: 'Roses',
-          amount: 25,
-          color: '#cc2936'
-        },
-        {
-          name: 'Tulips',
-          amount: 40,
-          color: '#f2c640'
-        },
-        {
-          name: 'Daisies',
-          amount: 15,
-          color: '#2a93d4'
-        },
-        {
-          name: 'Narcissuses',
-          amount: 9,
-          color: '#F7AD0A'
-        }
-      ]
+      revenue: 3,
     }
   },
   computed: {
-    transformedFlowerData() {
-      return {
-        name: 'Top Level',
-        children: this.flowers.map(flower => ({
-          ...flower,
-          size: flower.amount,
-          parent: 'Top Level'
-        }))
-      }
+    outerCircleRadius() {
+      const scale = scaleLinear()
+        .domain([0,10])
+        .range([0, 300])
+      return scale(this.revenue)
     },
-
-    layoutData() {
-      // Generate a D3 hierarchy
-      const rootHierarchy = hierarchy(this.transformedFlowerData)
-        .sum(d => d.size)
-        .sort((a, b) => {
-          return b.value - a.value
-        })
-
-      // Pack the circles inside the viewbox
-      return pack()
-        .size([500, 500])
-        .padding(10)(rootHierarchy)
+    innerCircleRadius() {
+      console.log(lineRadial)
+      return this.outerCircleRadius * 0.75
     }
-  }
+  },
 }
 </script>
 

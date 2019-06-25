@@ -1,21 +1,33 @@
 <template>
-  <div>
-    <div class="wrapper">
-      <svg width="800" height="800">
-        <defs>
-          <radialGradient id="exampleGradient">
-            <stop offset="5%" stop-color="white" />
-            <stop offset="95%" :stop-color="starColor" />
-          </radialGradient>
-        </defs>
-        <path
-          class="radial"
-          :d="radialData"
-          transform="translate(100, 100)"
-          fill="url(#exampleGradient)"
-        ></path>
-      </svg>
-    </div>
+  <div class="wrapper">
+    <svg width="500" height="500">
+      <defs>
+        <radialGradient id="exampleGradient">
+          <stop offset="5%" stop-color="white" />
+          <stop offset="95%" :stop-color="starColor" />
+        </radialGradient>
+      </defs>
+      <path
+        class="radial"
+        :d="radialData"
+        transform="translate(300, 300)"
+        fill="url(#exampleGradient)"
+      ></path>
+    </svg>
+    <aside>
+      <div class="range-input">
+        <input type="range" name="rays" min="4" max="90" v-model="rays" />
+        <label for="rays">Rays</label>
+      </div>
+      <div class="range-input">
+        <input type="range" name="radius" min="10" max="50" v-model="radius" />
+        <label for="radius">Radius</label>
+      </div>
+      <div class="range-input">
+        <input type="range" name="heat" min="1" max="100" v-model="heat" />
+        <label for="rays">Heat</label>
+      </div>
+    </aside>
   </div>
 </template>
 
@@ -26,9 +38,9 @@ import { lineRadial } from 'd3-shape';
 export default {
   data() {
     return {
-      revenue: 30,
-      rays: 9,
-      heat: 90,
+      radius: 20,
+      rays: 5,
+      heat: 5,
     };
   },
   computed: {
@@ -36,7 +48,7 @@ export default {
       const scale = scaleLinear()
         .domain([0, 100])
         .range([0, 300]);
-      return scale(this.revenue);
+      return scale(this.radius);
     },
     innerCircleRadius() {
       return this.outerCircleRadius * 0.5;
@@ -59,15 +71,24 @@ export default {
     starColor() {
       const myColor = scaleLinear()
         .domain([0, 25, 50, 75, 100])
-        .range(['red', 'orange', 'yellow', 'lightblue', 'blue']);
+        .range(['red', 'orange', 'yellow', 'lightblue', '#adadff']);
       return myColor(this.heat);
     },
   },
 };
 </script>
 
-<style>
+<style lang="scss">
 .wrapper {
-  padding: 100px;
+  display: flex;
+  align-items: center;
+}
+.range-input {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  input {
+    margin-right: 10px;
+  }
 }
 </style>

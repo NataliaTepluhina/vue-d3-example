@@ -3,20 +3,21 @@
     <svg width="500" height="500">
       <defs>
         <radialGradient id="exampleGradient">
-          <stop offset="5%" stop-color="white" />
+          <stop offset="2%" stop-color="white" />
           <stop offset="95%" :stop-color="starColor" />
         </radialGradient>
       </defs>
+      <rect width="100%" height="100%" fill="#0E0432" />
       <path
         class="radial"
         :d="radialData"
-        transform="translate(300, 300)"
+        transform="translate(250, 250)"
         fill="url(#exampleGradient)"
       ></path>
     </svg>
     <aside>
       <div class="range-input">
-        <input type="range" name="rays" min="4" max="90" v-model="rays" />
+        <input type="range" name="rays" min="4" max="60" v-model="rays" />
         <label for="rays">Rays</label>
       </div>
       <div class="range-input">
@@ -71,7 +72,7 @@ export default {
     starColor() {
       const myColor = scaleLinear()
         .domain([0, 25, 50, 75, 100])
-        .range(['red', 'orange', 'yellow', 'lightblue', '#adadff']);
+        .range(['#ff7665', '#ffb469', '#ffe876', '#fff', '#99cdff']);
       return myColor(this.heat);
     },
   },

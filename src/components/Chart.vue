@@ -29,8 +29,10 @@
       </div>
       <div class="legend">
         <p>Star radius ~ GitHub repo stars amount</p>
-        <p>Star rays ~ contributors</p>
-        <p>Star color ~ open issues (from red to blue, like real stars 😊)</p>
+        <p>Star rays count ~ contributors</p>
+        <p>
+          Star color ~ open issues count (from red to blue, like real stars 😊)
+        </p>
       </div>
     </div>
     <div class="description" v-if="tooltipVisible" :style="tooltipPosition">

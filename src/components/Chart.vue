@@ -2,30 +2,31 @@
   <div class="wrapper">
     <h1>Vue Constellation</h1>
     <div class="image-wrapper">
-      <svg width="700" height="700">
-        <rect width="100%" height="100%" fill="#0E0432" />
-        <g
-          v-for="repo in layoutData.children"
-          :key="repo.data.name"
-          :style="{
-            transform: `translate(${repo.x}px, ${repo.y}px)`,
-          }"
-          @mouseenter="showTooltip(repo.data)"
-          @mouseout="hideTooltip"
-        >
-          <defs>
-            <radialGradient :id="repo.gradient">
-              <stop offset="2%" stop-color="white" />
-              <stop offset="95%" :stop-color="repo.starColor" />
-            </radialGradient>
-          </defs>
-          <path
-            class="radial transform"
-            :d="repo.radialData"
-            :fill="`url(#${repo.gradient})`"
-          ></path>
-        </g>
-      </svg>
+      <div class="svg-bg">
+        <svg width="700" height="700">
+          <g
+            v-for="repo in layoutData.children"
+            :key="repo.data.name"
+            :style="{
+              transform: `translate(${repo.x}px, ${repo.y}px)`,
+            }"
+            @mouseenter="showTooltip(repo.data)"
+            @mouseout="hideTooltip"
+          >
+            <defs>
+              <radialGradient :id="repo.gradient">
+                <stop offset="2%" stop-color="white" />
+                <stop offset="95%" :stop-color="repo.starColor" />
+              </radialGradient>
+            </defs>
+            <path
+              class="radial transform"
+              :d="repo.radialData"
+              :fill="`url(#${repo.gradient})`"
+            ></path>
+          </g>
+        </svg>
+      </div>
       <div class="legend">
         <p>Star radius ~ GitHub repo stars amount</p>
         <p>Star rays ~ contributors</p>
@@ -164,6 +165,9 @@ h1 {
 .image-wrapper {
   display: flex;
   justify-content: center;
+}
+.svg-bg {
+  background-image: url('/stars.jpeg');
 }
 .legend {
   padding-left: 40px;

@@ -141,6 +141,9 @@ export default {
       this.tooltipPosition.top = e.pageY - 155 + 'px';
     });
   },
+  beforeDestroy() {
+    document.removeEventListener('mousemove');
+  },
 };
 </script>
 

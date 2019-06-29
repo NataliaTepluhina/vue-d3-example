@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <h1>Vue Constellation</h1>
-    <div>
+    <div class="image-wrapper">
       <svg width="700" height="700">
         <rect width="100%" height="100%" fill="#0E0432" />
         <g
@@ -26,6 +26,11 @@
           ></path>
         </g>
       </svg>
+      <div class="legend">
+        <p>Star radius ~ GitHub repo stars amount</p>
+        <p>Star rays ~ contributors</p>
+        <p>Star color ~ open issues (from red to blue, like real stars 😊)</p>
+      </div>
     </div>
     <div class="description" v-if="tooltipVisible" :style="tooltipPosition">
       <h3>{{ tooltipRepo.name }}</h3>
@@ -152,10 +157,17 @@ export default {
 h1 {
   padding-bottom: 30px;
 }
-svg {
-  margin: 0 auto;
-}
 
+.image-wrapper {
+  display: flex;
+  justify-content: center;
+}
+.legend {
+  padding-left: 40px;
+  font-size: 20px;
+  line-height: 50px;
+  text-align: left;
+}
 .transform {
   transition: all 0.5s ease-in;
 }
@@ -171,7 +183,7 @@ svg {
   position: absolute;
   font-size: 16px;
   text-align: center;
-  background: rgba(30, 30, 30, 0.9);
+  background: rgba(30, 30, 30, 0.95);
   padding: 10px 15px;
   z-index: 5;
   height: 120px;

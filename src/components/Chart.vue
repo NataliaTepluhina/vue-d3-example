@@ -10,15 +10,15 @@
         }"
       >
         <defs>
-          <radialGradient :id="`starGradient-${repo.data.name}`">
+          <radialGradient :id="repo.gradient">
             <stop offset="2%" stop-color="white" />
-            <stop offset="95%" :stop-color="starColor(repo.data)" />
+            <stop offset="95%" :stop-color="repo.starColor" />
           </radialGradient>
         </defs>
         <path
           class="radial"
-          :d="radialData(repo)"
-          :fill="`url(#starGradient-${repo.data.name})`"
+          :d="repo.radialData"
+          :fill="`url(#${repo.gradient})`"
         ></path>
       </g>
     </svg>
@@ -76,16 +76,14 @@ export default {
   },
   computed: {
     transformedRepoData() {
-      return {
+      const source = {
         name: 'Top Level',
         children: this.repositories.map(repo => ({
           ...repo,
           parent: 'Top Level',
         })),
       };
-    },
-    layoutData() {
-      const rootHierarchy = hierarchy(this.transformedRepoData)
+      const rootHierarchy = hierarchy(source)
         .sum(d => d.stars)
         .sort((a, b) => {
           return b.value - a.value;
@@ -93,6 +91,18 @@ export default {
       return pack()
         .size([800, 800])
         .padding(40)(rootHierarchy);
+    },
+    layoutData() {
+      const children = this.transformedRepoData.children.map(repo => ({
+        ...repo,
+        starColor: this.starColor(repo.data),
+        radialData: this.radialData(repo),
+        gradient: `starGradient-${repo.data.name}`,
+      }));
+      return {
+        ...this.transformedRepoData,
+        children,
+      };
     },
   },
 };

@@ -1,27 +1,38 @@
 <template>
   <div class="wrapper">
-    <svg width="800" height="800">
-      <rect width="100%" height="100%" fill="#0E0432" />
-      <g
-        v-for="repo in layoutData.children"
-        :key="repo.data.name"
-        :style="{
-          transform: `translate(${repo.x}px, ${repo.y}px)`,
-        }"
-      >
-        <defs>
-          <radialGradient :id="repo.gradient">
-            <stop offset="2%" stop-color="white" />
-            <stop offset="95%" :stop-color="repo.starColor" />
-          </radialGradient>
-        </defs>
-        <path
-          class="radial"
-          :d="repo.radialData"
-          :fill="`url(#${repo.gradient})`"
-        ></path>
-      </g>
-    </svg>
+    <h1>Vue Constellation</h1>
+    <div>
+      <svg width="700" height="700">
+        <rect width="100%" height="100%" fill="#0E0432" />
+        <g
+          v-for="repo in layoutData.children"
+          :key="repo.data.name"
+          :style="{
+            transform: `translate(${repo.x}px, ${repo.y}px)`,
+          }"
+          @mouseenter="showTooltip(repo.data)"
+          @mouseout="hideTooltip"
+        >
+          <defs>
+            <radialGradient :id="repo.gradient">
+              <stop offset="2%" stop-color="white" />
+              <stop offset="95%" :stop-color="repo.starColor" />
+            </radialGradient>
+          </defs>
+          <path
+            class="radial transform"
+            :d="repo.radialData"
+            :fill="`url(#${repo.gradient})`"
+          ></path>
+        </g>
+      </svg>
+    </div>
+    <div class="description" v-if="tooltipVisible" :style="tooltipPosition">
+      <h3>{{ tooltipRepo.name }}</h3>
+      <p>stars: {{ tooltipRepo.stars }}</p>
+      <p>contributors: {{ tooltipRepo.contributors }}</p>
+      <p>open issues: {{ tooltipRepo.issues }}</p>
+    </div>
   </div>
 </template>
 
@@ -35,6 +46,12 @@ export default {
   data() {
     return {
       repositories: dataset,
+      tooltipVisible: false,
+      tooltipRepo: null,
+      tooltipPosition: {
+        left: 0,
+        top: 0,
+      },
     };
   },
   methods: {
@@ -73,6 +90,14 @@ export default {
         .range(['#ff7665', '#ffb469', '#ffe876', '#fff', '#99cdff']);
       return myColor(scaledIssues(repo.issues));
     },
+    showTooltip(repo) {
+      this.tooltipVisible = true;
+      this.tooltipRepo = { ...repo };
+    },
+    hideTooltip() {
+      this.tooltipVisible = false;
+      this.tooltipRepo = null;
+    },
   },
   computed: {
     transformedRepoData() {
@@ -89,7 +114,7 @@ export default {
           return b.value - a.value;
         });
       return pack()
-        .size([800, 800])
+        .size([700, 700])
         .padding(40)(rootHierarchy);
     },
     layoutData() {
@@ -105,20 +130,70 @@ export default {
       };
     },
   },
+  mounted() {
+    document.addEventListener('mousemove', e => {
+      this.tooltipPosition.left = e.pageX + 'px';
+      this.tooltipPosition.top = e.pageY - 155 + 'px';
+    });
+  },
 };
 </script>
 
-<style lang="scss">
-.wrapper {
-  display: flex;
-  align-items: center;
+<style lang="scss" scoped>
+* {
+  margin: 0;
+  padding: 0;
 }
-.range-input {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-  input {
-    margin-right: 10px;
+.wrapper {
+  font-family: Arial;
+  padding-top: 30px;
+  text-align: center;
+}
+h1 {
+  padding-bottom: 30px;
+}
+svg {
+  margin: 0 auto;
+}
+
+.transform {
+  transition: all 0.5s ease-in;
+}
+
+.transform:hover {
+  cursor: pointer;
+  transform: rotate(40deg) scale(1.3);
+}
+
+.description {
+  font-family: Arial;
+  pointer-events: none;
+  position: absolute;
+  font-size: 16px;
+  text-align: center;
+  background: rgba(30, 30, 30, 0.9);
+  padding: 10px 15px;
+  z-index: 5;
+  height: 120px;
+  line-height: 30px;
+  margin: 0 auto;
+  color: #fff;
+  border-radius: 5px;
+  transform: translateX(-50%);
+  &.active {
+    display: block;
+  }
+  &:after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    width: 0;
+    height: 0;
+    margin-left: -10px;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid rgba(30, 30, 30, 0.9);
   }
 }
 </style>

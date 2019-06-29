@@ -83,4 +83,16 @@ export default [
     issues: 87,
     contributors: 246,
   },
+  {
+    name: 'nuxt',
+    stars: 20934,
+    issues: 207,
+    contributors: 153,
+  },
+  {
+    name: 'vue-apollo',
+    stars: 3795,
+    issues: 126,
+    contributors: 71,
+  },
 ];

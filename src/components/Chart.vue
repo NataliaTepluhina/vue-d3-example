@@ -15,7 +15,6 @@
             <stop offset="95%" :stop-color="starColor(repo.data)" />
           </radialGradient>
         </defs>
-        -->
         <path
           class="radial"
           :d="radialData(repo)"

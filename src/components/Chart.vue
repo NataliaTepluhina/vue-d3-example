@@ -76,12 +76,11 @@ export default {
         .domain([this.minValue('contributors'), this.maxValue('contributors')])
         .range([4, 80]);
       const rays = Math.round(scale(repo.data.contributors));
-      const step = 2 / (rays * 2);
+      const step = (2 * Math.PI) / (rays * 2);
       const points = [];
-      for (let i = 0; i <= 2; i += step) {
-        const interval = Math.round(i * rays);
-        const radius = interval % 2 ? repo.r * 0.5 : repo.r;
-        points.push([Math.PI * i, radius]);
+      for (let i = 0; i <= rays * 2; i++) {
+        const radius = i % 2 ? repo.r * 0.5 : repo.r;
+        points.push([i * step, radius]);
       }
       return points;
     },

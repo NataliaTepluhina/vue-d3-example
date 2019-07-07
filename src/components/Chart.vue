@@ -55,13 +55,11 @@ export default {
       return this.outerCircleRadius * 0.5;
     },
     radialPoints() {
-      const step = 2 / (this.rays * 2);
+      const step = (2 * Math.PI) / (this.rays * 2);
       const points = [];
-      for (let i = 0; i <= 2; i += step) {
-        const interval = Math.round(i * this.rays);
-        const radius =
-          interval % 2 ? this.innerCircleRadius : this.outerCircleRadius;
-        points.push([Math.PI * i, radius]);
+      for (let i = 0; i <= this.rays * 2; i++) {
+        const currentRadius = i % 2 ? this.innerRadius : this.outerRadius;
+        points.push([i * step, currentRadius]);
       }
       return points;
     },

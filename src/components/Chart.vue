@@ -1,58 +1,33 @@
 <template>
-  <div class="wrapper">
+  <section>
     <svg width="500" height="500">
-      <defs>
-        <radialGradient id="exampleGradient">
-          <stop offset="2%" stop-color="white" />
-          <stop offset="95%" :stop-color="starColor" />
-        </radialGradient>
-      </defs>
-      <rect width="100%" height="100%" fill="#0E0432" />
       <path
         class="radial"
         :d="radialData"
         transform="translate(250, 250)"
-        fill="url(#exampleGradient)"
+        fill="green"
       ></path>
     </svg>
-    <aside>
-      <div class="range-input">
-        <input type="range" name="rays" min="4" max="60" v-model="rays" />
-        <label for="rays">Rays</label>
-      </div>
-      <div class="range-input">
-        <input type="range" name="radius" min="10" max="50" v-model="radius" />
-        <label for="radius">Radius</label>
-      </div>
-      <div class="range-input">
-        <input type="range" name="heat" min="1" max="100" v-model="heat" />
-        <label for="rays">Heat</label>
-      </div>
-    </aside>
-  </div>
+    <div class="range-input">
+      <label for="rays">Rays</label>
+      <input name="rays" type="range" min="4" max="60" v-model="rays" />
+    </div>
+  </section>
 </template>
 
 <script>
-import { interpolateCubehelixDefault } from 'd3';
-import { scaleLinear, scaleSequential } from 'd3-scale';
 import { lineRadial } from 'd3-shape';
+
 export default {
   data() {
     return {
-      radius: 20,
-      rays: 5,
-      heat: 5,
+      outerRadius: 200,
+      rays: 8,
     };
   },
   computed: {
-    outerCircleRadius() {
-      const scale = scaleLinear()
-        .domain([0, 100])
-        .range([0, 300]);
-      return scale(this.radius);
-    },
-    innerCircleRadius() {
-      return this.outerCircleRadius * 0.5;
+    innerRadius() {
+      return this.outerRadius * 0.5;
     },
     radialPoints() {
       const step = (2 * Math.PI) / (this.rays * 2);
@@ -67,27 +42,19 @@ export default {
       const radialLineGenerator = lineRadial();
       return radialLineGenerator(this.radialPoints);
     },
-    starColor() {
-      const myColor = scaleLinear()
-        .domain([0, 25, 50, 75, 100])
-        .range(['#ff7665', '#ffb469', '#ffe876', '#fff', '#99cdff']);
-      return myColor(this.heat);
-    },
   },
 };
 </script>
 
-<style lang="scss">
-.wrapper {
-  display: flex;
-  align-items: center;
-}
+<style>
 .range-input {
   display: flex;
   align-items: center;
+  justify-content: center;
   margin-bottom: 10px;
-  input {
-    margin-right: 10px;
-  }
+}
+
+input {
+  margin-left: 10px;
 }
 </style>

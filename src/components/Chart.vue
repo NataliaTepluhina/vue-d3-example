@@ -45,27 +45,26 @@ import { lineRadial } from 'd3-shape';
 export default {
   data() {
     return {
-      radius: 20,
+      radius: 100,
       rays: 5,
       heat: 5,
     };
   },
   computed: {
-    outerCircleRadius() {
+    outerRadius() {
       const scale = scaleLinear()
-        .domain([0, 1000])
-        .range([0, 250]);
+        .domain([10, 1000])
+        .range([5, 250]);
       return scale(this.radius);
     },
-    innerCircleRadius() {
-      return this.outerCircleRadius * 0.5;
+    innerRadius() {
+      return this.outerRadius * 0.5;
     },
     radialPoints() {
       const step = (2 * Math.PI) / (this.rays * 2);
       const points = [];
       for (let i = 0; i <= this.rays * 2; i++) {
-        const currentRadius =
-          i % 2 ? this.innerCircleRadius : this.outerCircleRadius;
+        const currentRadius = i % 2 ? this.innerRadius : this.outerRadius;
         points.push([i * step, currentRadius]);
       }
       return points;

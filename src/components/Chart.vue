@@ -21,7 +21,13 @@
         <label for="rays">Rays</label>
       </div>
       <div class="range-input">
-        <input type="range" name="radius" min="10" max="50" v-model="radius" />
+        <input
+          type="range"
+          name="radius"
+          min="10"
+          max="1000"
+          v-model="radius"
+        />
         <label for="radius">Radius</label>
       </div>
       <div class="range-input">
@@ -47,8 +53,8 @@ export default {
   computed: {
     outerCircleRadius() {
       const scale = scaleLinear()
-        .domain([0, 100])
-        .range([0, 300]);
+        .domain([0, 1000])
+        .range([0, 250]);
       return scale(this.radius);
     },
     innerCircleRadius() {
@@ -58,7 +64,8 @@ export default {
       const step = (2 * Math.PI) / (this.rays * 2);
       const points = [];
       for (let i = 0; i <= this.rays * 2; i++) {
-        const currentRadius = i % 2 ? this.innerRadius : this.outerRadius;
+        const currentRadius =
+          i % 2 ? this.innerCircleRadius : this.outerCircleRadius;
         points.push([i * step, currentRadius]);
       }
       return points;

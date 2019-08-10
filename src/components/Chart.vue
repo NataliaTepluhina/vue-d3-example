@@ -2,7 +2,7 @@
   <div class="wrapper">
     <svg width="500" height="500">
       <defs>
-        <radialGradient id="exampleGradient">
+        <radialGradient id="starGradient">
           <stop offset="2%" stop-color="white" />
           <stop offset="95%" :stop-color="starColor" />
         </radialGradient>
@@ -12,7 +12,7 @@
         class="radial"
         :d="radialData"
         transform="translate(250, 250)"
-        fill="url(#exampleGradient)"
+        fill="url(#starGradient)"
       ></path>
     </svg>
     <aside>
@@ -45,8 +45,8 @@ import { lineRadial } from 'd3-shape';
 export default {
   data() {
     return {
-      radius: 100,
-      rays: 5,
+      radius: 300,
+      rays: 8,
       heat: 5,
     };
   },

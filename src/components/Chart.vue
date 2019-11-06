@@ -4,148 +4,29 @@
     <div class="image-wrapper">
       <div class="svg-bg">
         <svg width="700" height="700">
-          <g
-            v-for="repo in layoutData.children"
-            :key="repo.data.name"
-            :style="{
-              transform: `translate(${repo.x}px, ${repo.y}px)`,
-            }"
-            @mouseenter="showTooltip(repo.data)"
-            @mouseout="hideTooltip"
-          >
-            <defs>
-              <radialGradient :id="repo.gradient">
-                <stop offset="2%" stop-color="white" />
-                <stop offset="95%" :stop-color="repo.starColor" />
-              </radialGradient>
-            </defs>
-            <path
-              class="radial transform"
-              :d="repo.radialData"
-              :fill="`url(#${repo.gradient})`"
-            ></path>
-          </g>
+          <defs>
+            <radialGradient id="star-gradient">
+              <stop offset="2%" stop-color="white" />
+              <stop offset="95%" stop-color="green" />
+            </radialGradient>
+          </defs>
+          <path
+            class="radial"
+            transform="translate(250, 250)"
+            :fill="`url(#star-gradient)`"
+          ></path>
         </svg>
       </div>
-      <div class="legend">
-        <p>Star radius ~ GitHub repo stars amount</p>
-        <p>Star rays count ~ contributors</p>
-        <p>
-          Star color ~ open issues count (from red to blue, like real stars 😊)
-        </p>
-      </div>
-    </div>
-    <div class="description" v-if="tooltipVisible" :style="tooltipPosition">
-      <h3>{{ tooltipRepo.name }}</h3>
-      <p>stars: {{ tooltipRepo.stars }}</p>
-      <p>contributors: {{ tooltipRepo.contributors }}</p>
-      <p>open issues: {{ tooltipRepo.issues }}</p>
     </div>
   </div>
 </template>
 
 <script>
-import { scaleLinear, scaleSequential } from 'd3-scale';
-import { lineRadial } from 'd3-shape';
-import { min, max } from 'd3-array';
-import { hierarchy, pack } from 'd3-hierarchy';
-import dataset from '../assets/dataset';
 export default {
   data() {
-    return {
-      repositories: dataset,
-      tooltipVisible: false,
-      tooltipRepo: null,
-      tooltipPosition: {
-        left: 0,
-        top: 0,
-      },
-    };
+    return {};
   },
-  methods: {
-    minValue(prop) {
-      const arr = this.repositories.map(repo => repo[prop]);
-      return min(arr);
-    },
-    maxValue(prop) {
-      const arr = this.repositories.map(repo => repo[prop]);
-      return max(arr);
-    },
-    radialPoints(repo) {
-      const scale = scaleLinear()
-        .domain([this.minValue('contributors'), this.maxValue('contributors')])
-        .range([4, 80]);
-      const rays = Math.round(scale(repo.data.contributors));
-      const step = (2 * Math.PI) / (rays * 2);
-      const points = [];
-      for (let i = 0; i <= rays * 2; i++) {
-        const radius = i % 2 ? repo.r * 0.5 : repo.r;
-        points.push([i * step, radius]);
-      }
-      return points;
-    },
-    radialData(repo) {
-      const radialLineGenerator = lineRadial();
-      return radialLineGenerator(this.radialPoints(repo));
-    },
-    starColor(repo) {
-      const scaledIssues = scaleLinear()
-        .domain([this.minValue('issues'), this.maxValue('issues')])
-        .range([0, 100]);
-      const myColor = scaleLinear()
-        .domain([0, 25, 50, 75, 100])
-        .range(['#ff7665', '#ffb469', '#ffe876', '#fff', '#99cdff']);
-      return myColor(scaledIssues(repo.issues));
-    },
-    showTooltip(repo) {
-      this.tooltipVisible = true;
-      this.tooltipRepo = { ...repo };
-    },
-    hideTooltip() {
-      this.tooltipVisible = false;
-      this.tooltipRepo = null;
-    },
-  },
-  computed: {
-    transformedRepoData() {
-      const source = {
-        name: 'Top Level',
-        children: this.repositories.map(repo => ({
-          ...repo,
-          parent: 'Top Level',
-        })),
-      };
-      const rootHierarchy = hierarchy(source)
-        .sum(d => d.stars)
-        .sort((a, b) => {
-          return b.value - a.value;
-        });
-      return pack()
-        .size([700, 700])
-        .padding(40)(rootHierarchy);
-    },
-    layoutData() {
-      const children = this.transformedRepoData.children.map(repo => ({
-        ...repo,
-        starColor: this.starColor(repo.data),
-        radialData: this.radialData(repo),
-        gradient: `starGradient-${repo.data.name}`,
-      }));
-      return {
-        ...this.transformedRepoData,
-        children,
-      };
-    },
-  },
-  mounted() {
-    document.addEventListener('mousemove', e => {
-      this.tooltipPosition.left = e.pageX + 'px';
-      this.tooltipPosition.top = e.pageY - 155 + 'px';
-    });
-  },
-  beforeDestroy() {
-    document.removeEventListener('mousemove');
-  },
+  computed: {},
 };
 </script>
 

@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import { transformData } from '../utils';
+const starColors = ['#ff7665', '#ffb469', '#ffe876', '#fff', '#99cdff'];
 export default {
   data() {
     return {};
